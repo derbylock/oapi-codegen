@@ -339,12 +339,12 @@ func (response MultipleRequestAndResponseTypes200FormdataResponse) VisitMultiple
 	}
 }
 
-type MultipleRequestAndResponseTypes200ImagepngResponse struct {
+type MultipleRequestAndResponseTypes200ImagePngResponse struct {
 	Body          io.Reader
 	ContentLength int64
 }
 
-func (response MultipleRequestAndResponseTypes200ImagepngResponse) VisitMultipleRequestAndResponseTypesResponse(ctx *fiber.Ctx) error {
+func (response MultipleRequestAndResponseTypes200ImagePngResponse) VisitMultipleRequestAndResponseTypesResponse(ctx *fiber.Ctx) error {
 	ctx.Response().Header.Set("Content-Type", "image/png")
 	if response.ContentLength != 0 {
 		ctx.Response().Header.Set("Content-Length", fmt.Sprint(response.ContentLength))
@@ -481,12 +481,12 @@ type UnknownExampleResponseObject interface {
 	VisitUnknownExampleResponse(ctx *fiber.Ctx) error
 }
 
-type UnknownExample200Videomp4Response struct {
+type UnknownExample200VideoMp4Response struct {
 	Body          io.Reader
 	ContentLength int64
 }
 
-func (response UnknownExample200Videomp4Response) VisitUnknownExampleResponse(ctx *fiber.Ctx) error {
+func (response UnknownExample200VideoMp4Response) VisitUnknownExampleResponse(ctx *fiber.Ctx) error {
 	ctx.Response().Header.Set("Content-Type", "video/mp4")
 	if response.ContentLength != 0 {
 		ctx.Response().Header.Set("Content-Length", fmt.Sprint(response.ContentLength))

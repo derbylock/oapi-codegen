@@ -203,10 +203,10 @@ type ClientWithResponsesInterface interface {
 type TestResponse struct {
 	Body                  []byte
 	HTTPResponse          *http.Response
-	ApplicationbarJSON200 *Bar
-	ApplicationfooJSON200 *Foo
-	ApplicationbarJSON201 *BazApplicationBarPlusJSON
-	ApplicationfooJSON201 *BazApplicationFooPlusJSON
+	ApplicationBarJSON200 *Bar
+	ApplicationFooJSON200 *Foo
+	ApplicationBarJSON201 *BazApplicationBarPlusJSON
+	ApplicationFooJSON201 *BazApplicationFooPlusJSON
 }
 
 // Status returns HTTPResponse.Status
@@ -253,28 +253,28 @@ func ParseTestResponse(rsp *http.Response) (*TestResponse, error) {
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationbarJSON200 = &dest
+		response.ApplicationBarJSON200 = &dest
 
 	case rsp.Header.Get("Content-Type") == "application/bar+json" && rsp.StatusCode == 201:
 		var dest BazApplicationBarPlusJSON
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationbarJSON201 = &dest
+		response.ApplicationBarJSON201 = &dest
 
 	case rsp.Header.Get("Content-Type") == "application/foo+json" && rsp.StatusCode == 200:
 		var dest Foo
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationfooJSON200 = &dest
+		response.ApplicationFooJSON200 = &dest
 
 	case rsp.Header.Get("Content-Type") == "application/foo+json" && rsp.StatusCode == 201:
 		var dest BazApplicationFooPlusJSON
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationfooJSON201 = &dest
+		response.ApplicationFooJSON201 = &dest
 
 	}
 

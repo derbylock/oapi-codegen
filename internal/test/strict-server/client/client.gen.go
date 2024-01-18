@@ -1185,7 +1185,7 @@ func (r HeadersExampleResponse) StatusCode() int {
 type UnionExampleResponse struct {
 	Body                          []byte
 	HTTPResponse                  *http.Response
-	ApplicationalternativeJSON200 *Example
+	ApplicationAlternativeJSON200 *Example
 	JSON200                       *struct {
 		union json.RawMessage
 	}
@@ -1600,7 +1600,7 @@ func ParseUnionExampleResponse(rsp *http.Response) (*UnionExampleResponse, error
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
-		response.ApplicationalternativeJSON200 = &dest
+		response.ApplicationAlternativeJSON200 = &dest
 
 	case rsp.Header.Get("Content-Type") == "application/json" && rsp.StatusCode == 200:
 		var dest struct {
