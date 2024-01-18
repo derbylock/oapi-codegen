@@ -646,3 +646,37 @@ func TestLowercaseFirstCharacters(t *testing.T) {
 		})
 	}
 }
+
+func TestGenerateResponseName(t *testing.T) {
+	tests := []struct {
+		name         string
+		operationID  string
+		responseName string
+		expected     string
+	}{
+		{
+			name:         "Normal responseName",
+			operationID:  "GetPath",
+			responseName: "UpcomingResponse",
+			expected:     "UpcomingResponse",
+		},
+		{
+			name:         "Not valid responseName",
+			operationID:  "GetPath",
+			responseName: "200_Included_Item",
+			expected:     "GetPath_200_Included_Item",
+		},
+		{
+			name:         "Not valid responseName and operationID is empty",
+			operationID:  "",
+			responseName: "200_Included_Item",
+			expected:     "A_200_Included_Item",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, generateResponseName(tt.responseName, tt.operationID))
+		})
+	}
+}

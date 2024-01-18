@@ -278,7 +278,6 @@ func (o *OperationDefinition) GetResponseTypeDefinitions() ([]ResponseTypeDefini
 	sortedResponsesKeys := SortedResponsesKeys(responses)
 	for _, responseName := range sortedResponsesKeys {
 		responseRef := responses[responseName]
-
 		// We can only generate a type if we have a value:
 		if responseRef.Value != nil {
 			jsonCount := 0
@@ -293,7 +292,10 @@ func (o *OperationDefinition) GetResponseTypeDefinitions() ([]ResponseTypeDefini
 				contentType := responseRef.Value.Content[contentTypeName]
 				// We can only generate a type if we have a schema:
 				if contentType.Schema != nil {
-					responseSchema, err := GenerateGoSchema(contentType.Schema, []string{responseName})
+					responseSchema, err := GenerateGoSchema(
+						contentType.Schema,
+						[]string{generateResponseName(responseName, o.OperationId)},
+					)
 					if err != nil {
 						return nil, fmt.Errorf("Unable to determine Go type for %s.%s: %w", o.OperationId, contentTypeName, err)
 					}
@@ -327,8 +329,9 @@ func (o *OperationDefinition) GetResponseTypeDefinitions() ([]ResponseTypeDefini
 							TypeName: typeName,
 							Schema:   responseSchema,
 						},
-						ResponseName:    responseName,
-						ContentTypeName: contentTypeName,
+						ResponseName:              responseName,
+						ContentTypeName:           contentTypeName,
+						AdditionalTypeDefinitions: responseSchema.GetAdditionalTypeDefs(),
 					}
 					if IsGoTypeReference(responseRef.Ref) {
 						refType, err := RefPathToGoType(responseRef.Ref)
@@ -618,7 +621,6 @@ func OperationDefinitions(swagger *openapi3.T) ([]OperationDefinition, error) {
 				// They are the default securityPermissions which are injected into each
 				// path, except for the case where a path explicitly overrides them.
 				opDef.SecurityDefinitions = DescribeSecurityDefinition(swagger.Security)
-
 			}
 
 			if op.RequestBody != nil {
@@ -635,7 +637,7 @@ func OperationDefinitions(swagger *openapi3.T) ([]OperationDefinition, error) {
 }
 
 func generateDefaultOperationID(opName string, requestPath string) (string, error) {
-	var operationId = strings.ToLower(opName)
+	operationId := strings.ToLower(opName)
 
 	if opName == "" {
 		return "", fmt.Errorf("operation name cannot be an empty string")
@@ -982,7 +984,6 @@ func GenerateGorillaServer(t *template.Template, operations []OperationDefinitio
 }
 
 func GenerateStrictServer(t *template.Template, operations []OperationDefinition, opts Configuration) (string, error) {
-
 	var templates []string
 
 	if opts.Generate.ChiServer || opts.Generate.GorillaServer {

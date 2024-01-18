@@ -999,3 +999,15 @@ func isAdditionalPropertiesExplicitFalse(s *openapi3.Schema) bool {
 
 	return *s.AdditionalProperties.Has == false //nolint:gosimple
 }
+
+func generateResponseName(responseName, operationID string) string {
+	if !unicode.IsDigit(rune(responseName[0])) {
+		return responseName
+	}
+
+	if operationID == "" {
+		return fmt.Sprintf("A_%s", responseName)
+	}
+
+	return fmt.Sprintf("%s_%s", operationID, responseName)
+}
