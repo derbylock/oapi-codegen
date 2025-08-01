@@ -556,17 +556,21 @@ func OperationDefinitions(swagger *openapi3.T) ([]OperationDefinition, error) {
 					return nil, fmt.Errorf("error generating default OperationID for %s/%s: %s",
 						opName, requestPath, err)
 				}
-				
+
 				if op.Extensions == nil {
 					op.Extensions = make(map[string]any)
 				}
-				op.Extensions["x-go-oapi-codegen-original-operationID"] = op.OperationID
+				if _, ok := op.Extensions["x-go-oapi-codegen-original-operationID"]; !ok {
+					op.Extensions["x-go-oapi-codegen-original-operationID"] = op.OperationID
+				}
 
 			} else {
 				if op.Extensions == nil {
 					op.Extensions = make(map[string]any)
 				}
-				op.Extensions["x-go-oapi-codegen-original-operationID"] = op.OperationID
+				if _, ok := op.Extensions["x-go-oapi-codegen-original-operationID"]; !ok {
+					op.Extensions["x-go-oapi-codegen-original-operationID"] = op.OperationID
+				}
 				op.OperationID = ConfiguredToCamelCase(op.OperationID)
 			}
 			op.OperationID = typeNamePrefix(op.OperationID) + op.OperationID
